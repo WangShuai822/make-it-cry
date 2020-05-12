@@ -5,6 +5,8 @@ def remote = [:]
   remote.password = 'Jianxiang@1207'
   remote.allowAnyHosts = true
 
+
+
 pipeline {
     agent any
     options { disableConcurrentBuilds() }
@@ -15,6 +17,13 @@ pipeline {
         VERSION_ID="${BUILD_ID}"
     }
 
+    def execCommand = '''
+                    container_id=`docker ps|grep ${IMAGE_ADDR}|awk '{print $1}'`
+                    if [ -n "${container_id}" ]; then
+                        docker rm -f "${container_id}"
+                    fi
+                    docker run -d -p ${PORT}:8080 ${IMAGE_ADDR}:${VERSION_ID}
+    '''
     stages {
         stage('Test') {
             steps {
@@ -41,6 +50,7 @@ pipeline {
 //                 def clearNoneSSH = "n=`docker images | grep  '<none>' | wc -l`; "
 //                 if [ \$n -gt 0 ]; then docker rmi `docker images | grep  '<none>' | awk '{print \$3}'`; fi"
 //                 sshCommand remote: sshServer, command: "${clearNoneSSH}"
+                sshCommand remote: sshServer, command: "${execCommand}"
 
 
 //                 def container_id = "docker ps|grep $IMAGE_ADDR |awk '{print ${1}}'"
