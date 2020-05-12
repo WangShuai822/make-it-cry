@@ -44,8 +44,7 @@ pipeline {
 
 
 //                 def container_id = "docker ps|grep $IMAGE_ADDR |awk '{print ${1}}'"
-                def container_id = "docker ps|grep $IMAGE_ADDR"
-                sshCommand remote: remote ,command: "${container_id}"
+                sshCommand remote: remote ,command: "docker ps|grep $IMAGE_ADDR"
 
 //                 sshCommand remote: remote ,command: "container_id=`docker ps|grep $IMAGE_ADDR |awk '{print ${1}}'`"
 //                 sshCommand remote: remote ,command: "if [ -n ${container_id} ]; then docker rm -f ${container_id} fi"
