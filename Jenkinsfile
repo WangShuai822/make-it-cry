@@ -38,13 +38,14 @@ pipeline {
                 echo 'Deploying....'
                 sshCommand remote: remote ,command: 'docker -v'
 
-                def clearNoneSSH = "n=`docker images | grep  '<none>' | wc -l`; "
+//                 def clearNoneSSH = "n=`docker images | grep  '<none>' | wc -l`; "
 //                 if [ \$n -gt 0 ]; then docker rmi `docker images | grep  '<none>' | awk '{print \$3}'`; fi"
-                sshCommand remote: sshServer, command: "${clearNoneSSH}"
+//                 sshCommand remote: sshServer, command: "${clearNoneSSH}"
 
 
 //                 def container_id = "docker ps|grep $IMAGE_ADDR |awk '{print ${1}}'"
-//                 sshCommand remote: remote ,command: "${container_id}"
+                def container_id = "docker ps|grep $IMAGE_ADDR"
+                sshCommand remote: remote ,command: "${container_id}"
 
 //                 sshCommand remote: remote ,command: "container_id=`docker ps|grep $IMAGE_ADDR |awk '{print ${1}}'`"
 //                 sshCommand remote: remote ,command: "if [ -n ${container_id} ]; then docker rm -f ${container_id} fi"
