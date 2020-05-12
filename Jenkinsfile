@@ -38,7 +38,8 @@ pipeline {
                 echo 'Deploying....'
                 sshCommand remote: remote ,command: 'docker -v'
 
-                def clearNoneSSH = "n=`docker images | grep  '<none>' | wc -l`; if [ \$n -gt 0 ]; then docker rmi `docker images | grep  '<none>' | awk '{print \$3}'`; fi"
+                def clearNoneSSH = "n=`docker images | grep  '<none>' | wc -l`; "
+//                 if [ \$n -gt 0 ]; then docker rmi `docker images | grep  '<none>' | awk '{print \$3}'`; fi"
                 sshCommand remote: sshServer, command: "${clearNoneSSH}"
 
 
