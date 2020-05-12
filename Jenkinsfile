@@ -37,7 +37,7 @@ pipeline {
             steps {
                 echo 'Deploying....'
                 sshCommand remote: remote ,command: 'docker -v'
-                def container_id = "docker ps|grep '${IMAGE_ADDR}' |awk '{print $1}'"
+                def container_id = "docker ps|grep $IMAGE_ADDR |awk '{print $1}'"
                 sshCommand remote: remote ,command: "${container_id}"
 
 //                 sshCommand remote: remote ,command: "container_id=`docker ps|grep $IMAGE_ADDR |awk '{print ${1}}'`"
