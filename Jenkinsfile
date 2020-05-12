@@ -37,14 +37,15 @@ pipeline {
             steps {
                 echo 'Deploying....'
                 sshCommand remote: remote ,command: 'docker -v'
-//                 sh '''
-//                 container_id=`docker ps|grep ${IMAGE_ADDR}|awk '{print $1}'`
-//                 if [ -n "${container_id}" ]; then
-//                     docker rm -f "${container_id}"
-//                 fi
-//
-//                 docker run -d -p ${PORT}:8080 ${IMAGE_ADDR}:${VERSION_ID}
-//                 '''
+                sshCommand remote: remote ,command:
+                '''
+                container_id=`docker ps|grep ${IMAGE_ADDR}|awk '{print $1}'`
+                if [ -n "${container_id}" ]; then
+                    docker rm -f "${container_id}"
+                fi
+
+                docker run -d -p ${PORT}:8080 ${IMAGE_ADDR}:${VERSION_ID}
+                '''
             }
         }
 
