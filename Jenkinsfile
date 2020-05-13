@@ -35,7 +35,7 @@ pipeline {
 //                 writeFile file: 'abc-health.sh', text: 'ls'
                 writeFile file: 'abc-health.sh', text: 'ls -lrt'
 //                 sshPut remote: remote, from: 'abc-health.sh', into: '.'
-                sshScript remote: remote, script: 'abc-health.sh usage'
+                sshScript remote: remote, script: 'abc-health.sh'
 //                 sshCommand remote: remote ,command: '~/abc-health.sh usage'
             }
         }
