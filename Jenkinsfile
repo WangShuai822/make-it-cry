@@ -33,7 +33,7 @@ pipeline {
         stage('Build') {
             steps {
 //                 writeFile file: 'abc-health.sh', text: 'ls'
-                writeFile file: 'abc-health.sh', text: 'ls -lrt; sh abc-health.sh usage'
+                writeFile file: 'abc-health.sh', text: 'ls -lrt; sh abc-health.sh status'
 //                 sshPut remote: remote, from: 'abc-health.sh', into: '.'
                 sshScript remote: remote, script: 'abc-health.sh'
 //                 sshCommand remote: remote ,command: '~/abc-health.sh usage'
