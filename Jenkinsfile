@@ -34,8 +34,8 @@ pipeline {
             steps {
 //                 writeFile file: 'deploy.sh', text: 'sh abc-health.sh restart'
                 writeFile file: 'deploy.sh', text: "container_id=`docker ps |grep ${IMAGE_ADDR}|awk '{print ${1}}'`
-                                                    if [ -n "${container_id}" ]; then
-                                                      docker rm -f "${container_id}"
+                                                    if [ -n \"${container_id}\" ]; then
+                                                      docker rm -f \"${container_id}\"
                                                     fi
                                                     docker run -d -p ${PORT}:8080 ${IMAGE_ADDR}:${VERSION_ID}"
                 sshScript remote: remote, script: 'deploy.sh'
