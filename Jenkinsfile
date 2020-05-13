@@ -18,26 +18,27 @@ pipeline {
     }
 
     stages {
-//         stage('Test') {
-//             steps {
-//                 sh 'chmod u+x mvnw'
-//                 sh './mvnw clean test'
-//             }
-//         }
-//         stage('Build') {
-//             steps {
-//                 sh './mvnw package'
-//             }
-//         }
+        stage('Test') {
+            steps {
+                sh 'chmod u+x mvnw'
+                sh './mvnw clean test'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh './mvnw package'
+            }
+        }
 
         stage('Build') {
             steps {
-//                 writeFile file: 'deploy.sh', text: 'sh abc-health.sh restart'
-                writeFile file: 'deploy.sh', text: "container_id=`docker ps |grep ${IMAGE_ADDR}|awk '{print ${1}}';`
-                                                    if [ -n \"${container_id}\" ]; then
-                                                      docker rm -f \"${container_id}\"
-                                                    fi ;
-                                                    docker run -d -p ${PORT}:8080 ${IMAGE_ADDR}:${VERSION_ID};"
+                sh '''
+                mvn package
+
+                scp target/gov-xiangyun-ids-affairs-province-1.1.0-SNAPSHOT.jar root@49.235.120.86:/opt/server/msp/abc-health/
+                scp deploy.sh root@49.235.120.86:/opt/server/msp/abc-health/
+                '''
+                writeFile file: 'deploy.sh', text: 'sh deploy.sh restart'
                 sshScript remote: remote, script: 'deploy.sh'
             }
         }
@@ -63,9 +64,9 @@ pipeline {
 //                 '''
 //             }
 //         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+//         stage('Deploy') {
+//             steps {
+//                 echo 'Deploying....'
 //                 sshCommand remote: remote ,command: 'docker -v'
 
 //                 def clearNoneSSH = "n=`docker images | grep  '<none>' | wc -l`; "
@@ -88,8 +89,8 @@ pipeline {
 //
 //                 docker run -d -p ${PORT}:8080 ${IMAGE_ADDR}:${VERSION_ID}
 //                 '''
-            }
-        }
+//             }
+//         }
 
     }
 }
