@@ -17,11 +17,33 @@ pipeline {
         VERSION_ID="${BUILD_ID}"
     }
 
-//     stages {
+    stages {
 //         stage('Test') {
 //             steps {
 //                 sh 'chmod u+x mvnw'
 //                 sh './mvnw clean test'
+//             }
+//         }
+//         stage('Build') {
+//             steps {
+//                 sh './mvnw package'
+//             }
+//         }
+
+        stage('Build') {
+            steps {
+                sshCommand remote: remote ,command: 'sh ~/abc-health.sh usage'
+            }
+        }
+//         stage('Build Image') {
+//             steps {
+//                 sh '''
+//                 ./mvnw package
+//                 docker build -f Dockerfile -t ${IMAGE_NAME}:${VERSION_ID} .
+//                 docker tag ${IMAGE_NAME}:${VERSION_ID} ${IMAGE_ADDR}:${VERSION_ID}
+//                 docker push ${IMAGE_ADDR}:${VERSION_ID}
+//                 docker rmi ${IMAGE_NAME}:${VERSION_ID}
+//                 '''
 //             }
 //         }
 //         stage('Build Image') {
