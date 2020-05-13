@@ -33,8 +33,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                scp target/gov-xiangyun-ids-affairs-province-1.1.0-SNAPSHOT.jar root@49.235.120.86:/opt/server/msp/abc-health/
-                scp deploy.sh root@49.235.120.86:/opt/server/msp/abc-health/
+                scp target/make-it-cry-1.0-SNAPSHOT.war root@49.235.120.86:~/
+                scp deploy.sh root@49.235.120.86:~/
                 '''
                 writeFile file: 'deploy.sh', text: 'sh deploy.sh restart'
                 sshScript remote: remote, script: 'deploy.sh'
