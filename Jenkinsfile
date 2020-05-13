@@ -32,7 +32,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sshCommand remote: remote ,command: 'sh ~/abc-health.sh usage'
+                sshCommand remote: remote ,command: '~/abc-health.sh usage'
             }
         }
 //         stage('Build Image') {
