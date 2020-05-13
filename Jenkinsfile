@@ -33,10 +33,10 @@ pipeline {
         stage('Build') {
             steps {
 //                 writeFile file: 'deploy.sh', text: 'sh abc-health.sh restart'
-                writeFile file: 'deploy.sh', text: "container_id=`docker ps |grep ${IMAGE_ADDR}|awk '{print ${1}}'`
-                                                    if [ -n \"${container_id}\" ]; then
-                                                      docker rm -f \"${container_id}\"
-                                                    fi
+                writeFile file: 'deploy.sh', text: "container_id=`docker ps |grep ${IMAGE_ADDR}|awk '{print ${1}}' \n`
+                                                    if [ -n \"${container_id}\" ]; then \n
+                                                      docker rm -f \"${container_id}\" \n
+                                                    fi \n
                                                     docker run -d -p ${PORT}:8080 ${IMAGE_ADDR}:${VERSION_ID}"
                 sshScript remote: remote, script: 'deploy.sh'
             }
