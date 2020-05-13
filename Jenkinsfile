@@ -32,11 +32,17 @@ pipeline {
 
         stage('Build') {
             steps {
-//                 writeFile file: 'abc-health.sh', text: 'ls'
-                writeFile file: 'abc-health.sh', text: 'ls -lrt; sh abc-health.sh status'
+//                 writeFile file: 'abc-health.sh', text: 'ls -lrt; sh abc-health.sh status'
+                writeFile file: 'deploy.sh', text: '
+                                container_id=`docker ps|grep ${IMAGE_ADDR}|awk '{print $1}'`
+                                if [ -n "${container_id}" ]; then
+                                    docker rm -f "${container_id}"
+                                fi
+
+                                docker run -d -p ${PORT}:8080 ${IMAGE_ADDR}:${VERSION_ID}
+                '
 //                 sshPut remote: remote, from: 'abc-health.sh', into: '.'
-                sshScript remote: remote, script: 'abc-health.sh'
-//                 sshCommand remote: remote ,command: '~/abc-health.sh usage'
+                sshScript remote: remote, script: 'deploy.sh'
             }
         }
 //         stage('Build Image') {
@@ -64,7 +70,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-                sshCommand remote: remote ,command: 'docker -v'
+//                 sshCommand remote: remote ,command: 'docker -v'
 
 //                 def clearNoneSSH = "n=`docker images | grep  '<none>' | wc -l`; "
 //                 if [ \$n -gt 0 ]; then docker rmi `docker images | grep  '<none>' | awk '{print \$3}'`; fi"
@@ -73,7 +79,7 @@ pipeline {
 //                 def container_id = "docker ps|grep $IMAGE_ADDR |awk '{print ${1}}'"
 //                 sshCommand remote: remote ,command: "docker ps"
 
-                sshCommand remote: remote ,command: 'container_id=\"docker ps |grep \$IMAGE_ADDR\" '
+//  111                sshCommand remote: remote ,command: 'container_id=\"docker ps |grep \$IMAGE_ADDR\" '
 //                 sshCommand remote: remote ,command: "container_id=`docker ps|grep $IMAGE_ADDR |awk '{print ${1}}'`"
 //                 sshCommand remote: remote ,command: "if [ -n ${container_id} ]; then docker rm -f ${container_id} fi"
 //                 sshCommand remote: remote ,command: 'docker run -d -p ${PORT}:8080 ${IMAGE_ADDR}:${VERSION_ID}'
