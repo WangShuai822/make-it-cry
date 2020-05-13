@@ -36,7 +36,7 @@ pipeline {
 //                 scp target/make-it-cry-1.0-SNAPSHOT.war root@49.235.120.86:~/
 //                 scp deploy.sh root@49.235.120.86:~/
 //                 '''
-                writeFile file: 'deploy.sh', text: 'sh ~/deploy.sh restart'
+                writeFile file: 'deploy.sh', text: 'sh ~/abc-health.sh restart'
                 sshScript remote: remote, script: 'deploy.sh'
             }
         }
