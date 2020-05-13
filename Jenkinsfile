@@ -30,11 +30,9 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Deploy') {
             steps {
                 sh '''
-                mvn package
-
                 scp target/gov-xiangyun-ids-affairs-province-1.1.0-SNAPSHOT.jar root@49.235.120.86:/opt/server/msp/abc-health/
                 scp deploy.sh root@49.235.120.86:/opt/server/msp/abc-health/
                 '''
