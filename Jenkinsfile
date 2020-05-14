@@ -18,17 +18,17 @@ pipeline {
     }
 
     stages {
-        stage('Test') {
-            steps {
-                sh 'chmod u+x mvnw'
-                sh './mvnw clean test'
-            }
-        }
-        stage('Build') {
-            steps {
-                sh './mvnw package'
-            }
-        }
+//         stage('Test') {
+//             steps {
+//                 sh 'chmod u+x mvnw'
+//                 sh './mvnw clean test'
+//             }
+//         }
+//         stage('Build') {
+//             steps {
+//                 sh './mvnw package'
+//             }
+//         }
 
 //         stage('Deploy') {
 //             steps {
@@ -41,22 +41,22 @@ pipeline {
 //             }
 //         }
 
-        stage('Build Image') {
-            steps {
-                sh '''
-                ./mvnw package
-                docker build -f Dockerfile -t ${IMAGE_NAME}:${VERSION_ID} .
-                docker tag ${IMAGE_NAME}:${VERSION_ID} ${IMAGE_ADDR}:${VERSION_ID}
-                docker push ${IMAGE_ADDR}:${VERSION_ID}
-                docker rmi ${IMAGE_NAME}:${VERSION_ID}
-                '''
-            }
-        }
+//         stage('Build Image') {
+//             steps {
+//                 sh '''
+//                 ./mvnw package
+//                 docker build -f Dockerfile -t ${IMAGE_NAME}:${VERSION_ID} .
+//                 docker tag ${IMAGE_NAME}:${VERSION_ID} ${IMAGE_ADDR}:${VERSION_ID}
+//                 docker push ${IMAGE_ADDR}:${VERSION_ID}
+//                 docker rmi ${IMAGE_NAME}:${VERSION_ID}
+//                 '''
+//             }
+//         }
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
 
-                writeFile file: 'deploy.sh', text: "container_id=`docker ps|grep ${IMAGE_NAME}|awk '{print ${1}}'` \n" +
+                writeFile file: 'deploy.sh', text: "container_id=`docker ps|grep ${IMAGE_NAME}|awk '{print \$1}'` \n" +
                     " if [ -n ${container_id} ]; then "+
                     "   docker rm -f ${container_id} "+
                     " fi \n" +
