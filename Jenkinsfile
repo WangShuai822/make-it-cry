@@ -59,8 +59,6 @@ pipeline {
                 writeFile file: 'deploy.sh', text: "docker ps -a | grep ${IMAGE_NAME} | gawk '{cmd=\"docker rm -f \"\$1; system(cmd)}' \n"+
                                     "docker run -d -p ${PORT}:8080 ${IMAGE_ADDR}:${VERSION_ID}"
 
-
-//                 writeFile file: 'deploy.sh', text: "docker run -d -p ${PORT}:8080 ${IMAGE_ADDR}:${VERSION_ID}"
                 sshScript remote: remote, script: "deploy.sh"
             }
         }
