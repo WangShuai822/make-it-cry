@@ -30,38 +30,41 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
+//         stage('Deploy') {
+//             steps {
 //                 sh '''
 //                 scp target/make-it-cry-1.0-SNAPSHOT.war root@49.235.120.86:~/
 //                 scp deploy.sh root@49.235.120.86:~/
 //                 '''
-                writeFile file: 'deploy.sh', text: 'sh ~/abc-health.sh restart'
-                sshScript remote: remote, script: 'deploy.sh'
+//                 writeFile file: 'deploy.sh', text: 'sh ~/abc-health.sh restart'
+//                 sshScript remote: remote, script: 'deploy.sh'
+//             }
+//         }
+
+        stage('Build Image') {
+            steps {
+                sh '''
+                ./mvnw package
+                docker build -f Dockerfile -t ${IMAGE_NAME}:${VERSION_ID} .
+                docker tag ${IMAGE_NAME}:${VERSION_ID} ${IMAGE_ADDR}:${VERSION_ID}
+                docker push ${IMAGE_ADDR}:${VERSION_ID}
+                docker rmi ${IMAGE_NAME}:${VERSION_ID}
+                '''
             }
         }
-//         stage('Build Image') {
-//             steps {
-//                 sh '''
-//                 ./mvnw package
-//                 docker build -f Dockerfile -t ${IMAGE_NAME}:${VERSION_ID} .
-//                 docker tag ${IMAGE_NAME}:${VERSION_ID} ${IMAGE_ADDR}:${VERSION_ID}
-//                 docker push ${IMAGE_ADDR}:${VERSION_ID}
-//                 docker rmi ${IMAGE_NAME}:${VERSION_ID}
-//                 '''
-//             }
-//         }
-//         stage('Build Image') {
-//             steps {
-//                 sh '''
-//                 ./mvnw package
-//                 docker build -f Dockerfile -t ${IMAGE_NAME}:${VERSION_ID} .
-//                 docker tag ${IMAGE_NAME}:${VERSION_ID} ${IMAGE_ADDR}:${VERSION_ID}
-//                 docker push ${IMAGE_ADDR}:${VERSION_ID}
-//                 docker rmi ${IMAGE_NAME}:${VERSION_ID}
-//                 '''
-//             }
-//         }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
+
+                writeFile file: 'deploy.sh', text: "container_id=`docker ps|grep ${IMAGE_NAME}|awk '{print ${1}}'` \n" +
+                    " if [ -n ${container_id} ]; then "+
+                    "   docker rm -f ${container_id} "+
+                    " fi \n" +
+                    "docker run -d -p ${PORT}:8080 ${REPO_SERVER}/${REPO_NAMESPACE}/${IMAGE_NAME}:${VERSION_ID}"
+                sshScript remote: remote, script: "deploy.sh"
+            }
+        }
+
 //         stage('Deploy') {
 //             steps {
 //                 echo 'Deploying....'
