@@ -4,6 +4,6 @@ public class Face {
 
 
     public String face() {
-        return "smile";
+        return "cry";
     }
 }
