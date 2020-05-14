@@ -56,7 +56,7 @@ pipeline {
             steps {
                 echo 'Deploying....'
 
-                writeFile file: 'deploy.sh', text: "container_id=\`docker ps|grep ${IMAGE_NAME}|awk '{print \$1}'\` \n" +
+                writeFile file: 'deploy.sh', text: "container_id=`docker ps|grep ${IMAGE_NAME}|awk '{print \$1}'` \n" +
                     " if [ -n ${container_id} ]; then "+
                     "   docker rm -f ${container_id} "+
                     " fi \n"
