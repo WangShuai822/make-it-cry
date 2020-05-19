@@ -23,8 +23,8 @@ pipeline {
 //             }
 //         }
         stage('Test') {
-            echo '${WORKSPACE}'
             steps {
+                echo '${WORKSPACE}'
                 sh 'chmod u+x mvnw'
                 sh './mvnw org.jacoco:jacoco-maven-plugin:prepare-agent  clean  test -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true'
             }
