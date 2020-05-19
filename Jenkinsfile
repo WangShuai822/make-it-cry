@@ -16,10 +16,16 @@ pipeline {
     }
 
     stages {
+//         stage('Test') {
+//             steps {
+//                 sh 'chmod u+x mvnw'
+//                 sh './mvnw clean test'
+//             }
+//         }
         stage('Test') {
             steps {
                 sh 'chmod u+x mvnw'
-                sh './mvnw clean test'
+                sh './mvnw org.jacoco:jacoco-maven-plugin:prepare-agent  clean  test -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true'
             }
         }
         stage('Build') {
