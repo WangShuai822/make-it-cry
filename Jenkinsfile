@@ -26,20 +26,26 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'chmod u+x mvnw'
-                sh './mvnw org.jacoco:jacoco-maven-plugin:prepare-agent  clean  test -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true'
+                sh '''
+                    "./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent -f pom.xml clean  test \n" +
+                    "-Dmaven.test.skip=false -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true "
+                '''
+                junit 'target/surefire-reports/*.xml'
+                jacoco changeBuildStatus: true, maximumLineCoverage:0
             }
         }
-        stage('publishHTML & Clean Workspace') {
-            steps {
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: false, reportDir: "report", reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
-                cleanWs()
-            }
-        }
-        stage('Build') {
-            steps {
-                sh './mvnw package'
-            }
-        }
+//         stage('publishHTML & Clean Workspace') {
+//             steps {
+//                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: false, reportDir: "report", reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
+//                 cleanWs()
+//             }
+//         }
+//         stage('Build') {
+//             steps {
+//                 sh 'pwd'
+//                 sh './mvnw package'
+//             }
+//         }
 //         stage('Build Image') {
 //             steps {
 //                 sh '''
