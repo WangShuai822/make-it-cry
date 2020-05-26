@@ -17,38 +17,36 @@ pipeline {
     }
 
     stages {
-//         stage('Test') {
-//             steps {
-//                 sh 'chmod u+x mvnw'
-//                 sh './mvnw clean test'
-//             }
-//         }
         stage('Test') {
             steps {
-                sh '''
-                    chmod u+x mvnw
-                    ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent -f pom.xml clean test -Dmaven.test.skip=false -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true
-                '''
-                junit 'target/surefire-reports/*.xml'
-                jacoco changeBuildStatus: true, maximumLineCoverage: '0'
-
+                sh 'chmod u+x mvnw'
+                sh './mvnw clean test'
             }
         }
-        stage('Build & Generate Test Report') {
-          steps {
+//         stage('Test') {
+//             steps {
+//                 sh '''
+//                     chmod u+x mvnw
+//                     ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent -f pom.xml clean test -Dmaven.test.skip=false -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true
+//                 '''
+//                 junit 'target/surefire-reports/*.xml'
+//                 jacoco changeBuildStatus: true, maximumLineCoverage: '0'
+//
+//             }
+//         }
+        stage('Generate Test Report') {
+            steps {
               script {
                  try {
-                        sh 'chmod +x mvnw'
-                        sh '.mvnw build -x test --no-daemon'
-                        sh '.mvnw test jacocoTestReport --no-daemon'
+                        sh 'mvn org.jacoco:jacoco-maven-plugin:report'
                     } finally {
-                        junit '**/build/test-results/test/*.xml' //makethe junit test results available in any case (success & failure)
-                    }
-                }
+                        junit 'target/surefire-reports/*.xml'
+                 }
+              }
             }
         }
 
-       stage('Publish Test Coverage Report') {
+        stage('Publish Test Coverage Report') {
          steps {
            step([$class: 'JacocoPublisher',
                 execPattern: 'target/*.exec',
@@ -58,6 +56,7 @@ pipeline {
                 ])
             }
         }
+
 //         stage('publishHTML & Clean Workspace') {
 //             steps {
 //                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: false, reportDir: "report", reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
