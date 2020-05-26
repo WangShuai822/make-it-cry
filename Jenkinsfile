@@ -27,8 +27,7 @@ pipeline {
             steps {
                 sh '''
                     chmod u+x mvnw
-                    ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent -f pom.xml clean  test \n
-                    -Dmaven.test.skip=false -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true
+                    ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent -f pom.xml clean test -Dmaven.test.skip=false -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true
                 '''
                 junit 'target/surefire-reports/*.xml'
                 jacoco changeBuildStatus: true, maximumLineCoverage: '0'
