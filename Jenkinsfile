@@ -31,7 +31,8 @@ pipeline {
                     "-Dmaven.test.skip=false -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true "
                 '''
                 junit 'target/surefire-reports/*.xml'
-                jacoco changeBuildStatus: true, maximumLineCoverage:0
+                jacoco changeBuildStatus: true, maximumLineCoverage: '0'
+
             }
         }
 //         stage('publishHTML & Clean Workspace') {
