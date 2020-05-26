@@ -34,6 +34,32 @@ pipeline {
 
             }
         }
+        stage('Build & Generate Test Report') {
+          steps {
+              script {
+                 try {
+                        sh 'chmod +x mvnw'
+                        sh '.mvnw build -x test --no-daemon'
+                        sh '.mvnw test jacocoTestReport --no-daemon'
+                    } finally {
+                        junit '**/build/test-results/test/*.xml' //make
+                        the junit test results available in any case
+                        (success & failure)
+                    }
+                }
+            }
+        }
+
+       stage('Publish Test Coverage Report') {
+         steps {
+           step([$class: 'JacocoPublisher',
+                execPattern: 'target/*.exec',
+                classPattern: 'target/classes',
+                sourcePattern: 'src/main/java',
+                exclusionPattern: 'src/test*'
+                ])
+            }
+        }
 //         stage('publishHTML & Clean Workspace') {
 //             steps {
 //                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: false, reportDir: "report", reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
