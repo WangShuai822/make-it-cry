@@ -38,7 +38,7 @@ pipeline {
             steps {
               script {
                  try {
-                        sh 'mvn org.jacoco:jacoco-maven-plugin:report'
+                        sh '.mvnw org.jacoco:jacoco-maven-plugin:report'
                     } finally {
                         junit 'target/surefire-reports/*.xml'
                  }
