@@ -23,17 +23,6 @@ pipeline {
                 sh './mvnw clean test'
             }
         }
-//         stage('Test') {
-//             steps {
-//                 sh '''
-//                     chmod u+x mvnw
-//                     ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent -f pom.xml clean test -Dmaven.test.skip=false -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true
-//                 '''
-//                 junit 'target/surefire-reports/*.xml'
-//                 jacoco changeBuildStatus: true, maximumLineCoverage: '0'
-//
-//             }
-//         }
         stage('Generate Test Report') {
             steps {
               script {
@@ -43,7 +32,9 @@ pipeline {
                         junit 'target/surefire-reports/*.xml'
                  }
               }
+//               jacoco changeBuildStatus: true, maximumLineCoverage: '0'
             }
+
         }
 
         stage('Publish Test Coverage Report') {
@@ -63,12 +54,12 @@ pipeline {
 //                 cleanWs()
 //             }
 //         }
-//         stage('Build') {
-//             steps {
-//                 sh 'pwd'
-//                 sh './mvnw package'
-//             }
-//         }
+        stage('Build') {
+            steps {
+                sh 'pwd'
+                sh './mvnw package'
+            }
+        }
 //         stage('Build Image') {
 //             steps {
 //                 sh '''
