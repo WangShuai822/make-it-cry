@@ -35,7 +35,9 @@ pipeline {
                 sh './mvnw package'
             }
         }
-
+        stage('jacoco'){
+               jacoco()
+        }
         stage('Build Image') {
             steps {
                 sh '''
